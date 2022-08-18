@@ -1,7 +1,7 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
     <a href="index3.html" class="brand-link">
-        <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <img src="{{ asset('dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">AdminLTE 3</span>
     </a>
 
@@ -9,7 +9,7 @@
 
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                <img src="{{ asset('dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <a href="#" class="d-block">Alexander Pierce</a>
@@ -40,8 +40,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('logout') }}" class="nav-link active"
-                                    onclick="event.preventDefault();
+                            <a href="{{ route('logout') }}" class="nav-link active" onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('Logout') }}</p>
@@ -57,13 +56,56 @@
                                 <p>Pages</p>
                             </a>
                         </li>
-                        @endif
                         <li class="nav-item">
-                            <a href="./index3.html" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Dashboard v3</p>
+                            <a class="nav-link">
+                                <i class="nav-icon fas fa-chart-pie"></i>
+                                <p>
+                                    {{__('Manage Checklists')}}
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            
+                            <ul class="nav nav-treeview">
+                                @foreach(\App\Models\ChecklistGroup::with('checklists')->get() as $group)
+                                <li class="nav-item">
+                                    <a class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>{{$group->name}}</p>
+                                        <i class="right fas fa-angle-left nav-item"></i>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a href="{{route('admin.checklist_groups.edit', $group->id)}}" class="nav-link">
+                                                <i class="nav-icon fas fa-edit"></i>
+                                                <p>{{__('Edit')." - ".$group->name}}</p>
+                                            </a>
+                                        </li>
+                                    @foreach($group->checklists as $checklist)
+                                        <li class="nav-item">
+                                            <a href="{{route('admin.checklist_groups.checklists.edit', [$group, $checklist])}}" class="nav-link">
+                                                <i class="far fa-dot-circle nav-icon"></i>
+                                                <p>{{$checklist->name}}</p>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                    <li class="nav-item">
+                                        <a href="{{route('admin.checklist_groups.checklists.create', $group)}}" class="nav-link">
+                                            <i class="nav-icon far fa-plus-square"></i>
+                                            <p>{{__('New Checklist')}}</p>
+                                        </a>
+                                    </li>
+                                    </ul>
+                                </li>
+                                @endforeach    
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{route('admin.checklist_groups.create')}}" class="nav-link">
+                                <i class="nav-icon far fa-plus-square"></i>
+                                <p>{{__('New Checklist group')}}</p>
                             </a>
                         </li>
+                        @endif
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -135,41 +177,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-chart-pie"></i>
-                        <p>
-                            Charts
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="pages/charts/chartjs.html" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>ChartJS</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/charts/flot.html" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Flot</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/charts/inline.html" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Inline</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/charts/uplot.html" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>uPlot</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-tree"></i>
